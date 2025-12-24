@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1066290056544",
+    "project_id": "autoteach-5133b",
+    "storage_bucket": "autoteach-5133b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066290056544:android:6b8e108e7b2447df0b6205",
+        "android_client_info": {
+          "package_name": "com.example.autoteach"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlZ46qv4HCgZ9VMxupjX6HX8p31LbgH6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="#E3F2FD">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#1976D2"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- ID Input -->
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="ID"
+        android:id="@+id/id"
+        android:layout_marginBottom="16dp"
+        android:background="@android:drawable/edit_text"
+        android:padding="12dp"/>
+
+    <!-- Password Input -->
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:id="@+id/pass"
+        android:inputType="textPassword"
+        android:layout_marginBottom="24dp"
+        android:background="@android:drawable/edit_text"
+        android:padding="12dp"/>
+
+    <!-- New TextView for role selection -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Are you a teacher or student?"
+        android:textSize="16sp"
+        android:textColor="#1976D2"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Centered Checkboxes -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="24dp">
+
+        <CheckBox
+            android:id="@+id/student"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Student"
+            android:textColor="#1976D2" />
+
+        <CheckBox
+            android:id="@+id/teacher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:text="Teacher"
+            android:textColor="#1976D2" />
+    </LinearLayout>
+
+    <!-- Send Button -->
+    <Button
+        android:id="@+id/send"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#1976D2"
+        android:text="Send"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
+
+    <!-- Register Button (transparent background) -->
+    <Button
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:text="Don't have an account? Register here"
+        android:textColor="#3B5998" />
+
+</LinearLayout>
