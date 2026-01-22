@@ -33,6 +33,11 @@ android {
 }
 
 dependencies {
+    implementation(libs.mlkit.text.recognition)
+    implementation(libs.play.services.mlkit.text.recognition.common)
+
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("org.json:json:20240303")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

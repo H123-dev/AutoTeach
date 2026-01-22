@@ -1,38 +1,39 @@
 package com.example.autoteach;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 public class CodeSnippit {
-    public byte[] ogImageBytes;
+    public String base64Image;
     public String codeText;
     public String finalCode;
-    public HashMap<Integer , Boolean> testCaseRes;//t0t1t2
+    public HashMap<String , Boolean> testCaseRes;
     double grade;
 
     public CodeSnippit() {
     }
-    public CodeSnippit(byte [] og )
+    public CodeSnippit(String og , String ocr , String finalc , String className)
     {
-        this.ogImageBytes = og;
-        this.codeText = picToText();
-        this.finalCode = textToRunable(codeText);
-        this.testCaseRes = new HashMap<Integer, Boolean>();
-        this.grade = calculateGrade();
+        this.base64Image = og;
+        this.codeText = ocr;
+        this.finalCode = finalc;
+        this.testCaseRes = new HashMap<String, Boolean>();
+        this.grade = calculateGrade(className);
     }
-    private double calculateGrade()
+    private double calculateGrade(String id)
     {
         return 1.0;
     }
-    private String picToText()
-    {
-        // use OCR to convert image to text
-        return "converted text";
-    }
-    private String textToRunable(String codeText)
-    {
-        // process text to make it runable code
-        return "runable code";
-    }
-
-
-
 }

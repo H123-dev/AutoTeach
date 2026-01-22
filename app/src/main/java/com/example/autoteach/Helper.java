@@ -8,6 +8,7 @@ import android.net.Uri;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import android.util.Base64;
 
 public class Helper {
 
@@ -34,10 +35,8 @@ public class Helper {
             inputStream.close();
             return buffer.toByteArray();
         }
-
-        // Convert byte array to Bitmap
-        public static Bitmap bytesToBitmap(byte[] bytes) {
-            return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        public static String bytesToBase64(byte[] bytes) {
+            return Base64.encodeToString(bytes, Base64.DEFAULT);
         }
     }
 

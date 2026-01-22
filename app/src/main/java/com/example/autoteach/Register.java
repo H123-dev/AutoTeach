@@ -60,7 +60,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             }
             if(!Helper.checkID(Id))
             {
-                Toast.makeText(this, "ID must be 6 digits", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "ID must be 9 digits", Toast.LENGTH_LONG).show();
                 return;
             }
             if(!teacher.isChecked() && !student.isChecked())

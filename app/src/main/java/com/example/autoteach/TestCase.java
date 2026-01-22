@@ -12,12 +12,7 @@ public class TestCase
 
     public TestCase(String input, String expectedOutput) {
         this.input = input;
-        this.expectedOutput = expectedOutput;
-        this.testCaseCode = turnRunable(input);
-    }
-    private String turnRunable(String testCaseCode)
-    {
-        // process text to make it runable code
-        return "runable code";
+        this.expectedOutput = expectedOutput;// ex "6" for input "1 2 3"
+        this.testCaseCode =input;//asssuming like the entry in both is alr codd so for ex int [] a = new int[]{1,2,3};
     }
 }

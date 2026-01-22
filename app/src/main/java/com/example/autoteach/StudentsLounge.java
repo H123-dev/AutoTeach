@@ -48,29 +48,32 @@ public class StudentsLounge extends AppCompatActivity implements View.OnClickLis
             } else {
                 allGrades = new HashMap<>();
             }
+
             LinearLayout classesContainer = findViewById(R.id.classes_container);
             for (String classId : allGrades.keySet()) {
                 addClassButtonToUI(classId, classesContainer);
             }
         });
         joinClass = findViewById(R.id.join);
+        joinClass.setOnClickListener(this);
     }
 
     public void addClassButtonToUI(String classId, LinearLayout container) {
-        TextView txt = new TextView(this);
-        txt.setText(classId + " - Grade: " + allGrades.get(classId));
-        txt.setTextSize(18);
-        txt.setTextColor(Color.parseColor("#3949AB"));
-        txt.setBackgroundColor(Color.parseColor("#E8EAF6"));
-        txt.setPadding(12, 12, 12, 12);
+        Button classButton = new Button(this);
+        classButton.setText(classId);
+        classButton.setTextSize(18);
+        classButton.setTextColor(Color.parseColor("#3949AB"));
+        classButton.setBackgroundColor(Color.parseColor("#E8EAF6"));
+        classButton.setPadding(12, 12, 12, 12);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         params.setMargins(0, 0, 0, 12);
-        txt.setLayoutParams(params);
-        container.addView(txt);
+        classButton.setLayoutParams(params);
+        classButton.setOnClickListener(this);
+        container.addView(classButton);
     }
 
     @Override

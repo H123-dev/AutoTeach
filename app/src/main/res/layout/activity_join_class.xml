@@ -6,6 +6,17 @@
     android:background="#E3F2FD"
     android:padding="32dp">
 
+    <TextView
+        android:id="@+id/test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test"
+        android:textSize="16sp"
+        android:textColor="#1976D2"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"/>
+
     <LinearLayout
         android:id="@+id/center_content"
         android:layout_width="match_parent"

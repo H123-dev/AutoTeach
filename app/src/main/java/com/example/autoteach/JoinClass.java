@@ -1,14 +1,33 @@
 package com.example.autoteach;
 
 import android.Manifest;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -22,38 +41,42 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class JoinClass extends AppCompatActivity implements View.OnClickListener {
+    TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
     private Uri photoUri;
+    TextView test;
     EditText classCode;
     Button cameraButton , galleryButton , backButton;
     private final ActivityResultLauncher<String> pickImage =
             registerForActivityResult(new ActivityResultContracts.GetContent(),
                     uri -> {
                         if (uri != null) {
-                            byte[] imageBytes = null;
                             try {
-                                imageBytes = Helper.ImageUtils.uriToBytes(this, uri);
-                            } catch (IOException e) {
+                                Bitmap bitmap = uriToBitmap(this, uri);
+                                InputImage image = InputImage.fromBitmap(bitmap, 0);
+                                processOCR(image);
+                            } catch (Exception e) {
                                 throw new RuntimeException(e);
-                            }
-                            uploadArrayBytes(imageBytes);
-                        }
+                            }}
                     });
 
     private final ActivityResultLauncher<Uri> takePicture =
             registerForActivityResult(new ActivityResultContracts.TakePicture(),
                     success -> {
-                        byte[] imageBytes = null;
                         try {
-                            imageBytes = Helper.ImageUtils.uriToBytes(this, photoUri);
-                        } catch (IOException e) {
+                            Bitmap bitmap = uriToBitmap(this, photoUri);
+                            InputImage image = InputImage.fromBitmap(bitmap, 0);
+                            processOCR(image);
+                        } catch (Exception e) {
                             throw new RuntimeException(e);
-                        }
-                        if (success) {
-                            uploadArrayBytes(imageBytes);
                         }
                     });
     String StudetnID;
@@ -66,6 +89,7 @@ public class JoinClass extends AppCompatActivity implements View.OnClickListener
         classCode = findViewById(R.id.classCode);
         cameraButton = findViewById(R.id.cameraButton);
         galleryButton = findViewById(R.id.galleryButton);
+        test = findViewById(R.id.test);
         backButton = findViewById(R.id.backButton);
         cameraButton.setOnClickListener(this);
         galleryButton.setOnClickListener(this);
@@ -108,16 +132,6 @@ public class JoinClass extends AppCompatActivity implements View.OnClickListener
             pickImage.launch("image/*");
         }
     }
-
-    private void uploadArrayBytes(byte[] data) {
-        String code = classCode.getText().toString().trim();
-        if(code.isEmpty())
-        {
-            Toast.makeText(this, "Please enter class code", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-    }
     private void requestCameraPermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -133,5 +147,75 @@ public class JoinClass extends AppCompatActivity implements View.OnClickListener
     private File createImageFile() throws IOException {
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         return File.createTempFile("photo_", ".jpg", storageDir);
+    }
+    private void main(Uri imageUri)
+    {
+        byte[] imageBytes = null;
+        try {
+            imageBytes = Helper.ImageUtils.uriToBytes(this, photoUri);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        String base64Image = Helper.ImageUtils.bytesToBase64(imageBytes);
+        String classCodeStr = classCode.getText().toString().trim();
+        if(classCodeStr.isEmpty())
+        {
+            Toast.makeText(this, "Please enter the class code.", Toast.LENGTH_LONG).show();
+            return;
+        }
+    }
+    private Bitmap uriToBitmap(Context context, Uri uri) throws IOException {
+        InputStream inputStream = context.getContentResolver().openInputStream(uri);
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+        inputStream.close();
+        return bitmap;
+    }
+    private void processOCR(InputImage image) {
+        recognizer.process(image)
+                .addOnSuccessListener(new OnSuccessListener<Text>() {
+                    @Override
+                    public void onSuccess(Text visionText) {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(visionText.getText()).append("\n");
+                        String ocrText = sb.toString();
+                        String prompt =
+                                "You are a Java 17 compiler-level code fixer.\n" +
+                                        "\n" +
+                                        "INPUT:\n" +
+                                        "Java source code extracted from OCR. It may contain mistakes like extra spaces, missing semicolons, or other OCR artifacts.\n" +
+                                        "\n" +
+                                        "TASK:\n" +
+                                        "Fix ALL Java syntax and compilation errors so it compiles under Java 17.\n" +
+                                        "\n" +
+                                        "RULES (MUST FOLLOW):\n" +
+                                        "1. Output ONLY valid Java source code.\n" +
+                                        "2. Do NOT include explanations, comments, markdown, or formatting.\n" +
+                                        "3. Do NOT include ``` or ''' or any quotes.\n" +
+                                        "4. Do NOT include the word 'java' or any language header.\n" +
+                                        "5. The FIRST and ONLY public class must be named Main.\n" +
+                                        "6. Do NOT place static members inside non-static inner classes.\n" +
+                                        "7. Preserve original logic, variable names, and structure unless changes are required to compile.\n" +
+                                        "8. Inner classes must be properly wrapped with opening '{' and closing '}' braces.\n" +
+                                        "   If necessary, make inner classes static or top-level to ensure compilation.\n" +
+                                        "\n" +
+                                        "OUTPUT:\n" +
+                                        "Return ONLY the corrected Java code. Nothing else.\n" +
+                                        "\n" +
+                                        "CODE TO FIX:\n" +
+                                        ocrText + "\n";
+                        AIHELPER.runAIModel(JoinClass.this, prompt, new Listener() {
+                            @Override
+                            public void onSuccess(String result) {
+                                CodeSnippit c = new CodeSnippit();
+                            }
+
+                            @Override
+                            public void onFailure(String errorMessage) {
+
+                            }
+                        });
+                    }
+                })
+                .addOnFailureListener(e -> Toast.makeText(JoinClass.this, "Text recognition failed", Toast.LENGTH_SHORT).show());
     }
 }
