@@ -92,7 +92,10 @@ public class TeachersLounge extends AppCompatActivity implements View.OnClickLis
         }
         else
         {
-
+            String buttonName = ((Button)view).getText().toString();
+            Intent intent = new Intent(this, ClassView.class);
+            intent.putExtra("ClassID", buttonName);
+            startActivity(intent);
         }
     }
 }

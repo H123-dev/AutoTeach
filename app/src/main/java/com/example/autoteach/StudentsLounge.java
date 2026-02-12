@@ -59,8 +59,8 @@ public class StudentsLounge extends AppCompatActivity implements View.OnClickLis
     }
 
     public void addClassButtonToUI(String classId, LinearLayout container) {
-        Button classButton = new Button(this);
-        classButton.setText(classId);
+        TextView classButton = new TextView(this);
+        classButton.setText(classId + " : " +allGrades.get(classId));
         classButton.setTextSize(18);
         classButton.setTextColor(Color.parseColor("#3949AB"));
         classButton.setBackgroundColor(Color.parseColor("#E8EAF6"));

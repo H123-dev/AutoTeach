@@ -7,6 +7,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
@@ -50,8 +53,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class JoinClass extends AppCompatActivity implements View.OnClickListener {
+    FirebaseDatabase db;
+    DatabaseReference classRef;
+    DatabaseReference studentRef;
     TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
-    private Uri photoUri;
+    Uri photoUri;
     TextView test;
     EditText classCode;
     Button cameraButton , galleryButton , backButton;
@@ -61,8 +67,7 @@ public class JoinClass extends AppCompatActivity implements View.OnClickListener
                         if (uri != null) {
                             try {
                                 Bitmap bitmap = uriToBitmap(this, uri);
-                                InputImage image = InputImage.fromBitmap(bitmap, 0);
-                                processOCR(image);
+                                processOCR(uri,bitmap);
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }}
@@ -73,8 +78,7 @@ public class JoinClass extends AppCompatActivity implements View.OnClickListener
                     success -> {
                         try {
                             Bitmap bitmap = uriToBitmap(this, photoUri);
-                            InputImage image = InputImage.fromBitmap(bitmap, 0);
-                            processOCR(image);
+                            processOCR(photoUri,bitmap);
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
@@ -89,7 +93,6 @@ public class JoinClass extends AppCompatActivity implements View.OnClickListener
         classCode = findViewById(R.id.classCode);
         cameraButton = findViewById(R.id.cameraButton);
         galleryButton = findViewById(R.id.galleryButton);
-        test = findViewById(R.id.test);
         backButton = findViewById(R.id.backButton);
         cameraButton.setOnClickListener(this);
         galleryButton.setOnClickListener(this);
@@ -148,11 +151,17 @@ public class JoinClass extends AppCompatActivity implements View.OnClickListener
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         return File.createTempFile("photo_", ".jpg", storageDir);
     }
-    private void main(Uri imageUri)
-    {
+    private Bitmap uriToBitmap(Context context, Uri uri) throws IOException {
+        InputStream inputStream = context.getContentResolver().openInputStream(uri);
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+        inputStream.close();
+        return bitmap;
+    }
+    private void processOCR(Uri uri , Bitmap bitmap) {
+        InputImage image = InputImage.fromBitmap(bitmap, 0);
         byte[] imageBytes = null;
         try {
-            imageBytes = Helper.ImageUtils.uriToBytes(this, photoUri);
+            imageBytes = Helper.ImageUtils.uriToBytes(this, uri);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -163,14 +172,6 @@ public class JoinClass extends AppCompatActivity implements View.OnClickListener
             Toast.makeText(this, "Please enter the class code.", Toast.LENGTH_LONG).show();
             return;
         }
-    }
-    private Bitmap uriToBitmap(Context context, Uri uri) throws IOException {
-        InputStream inputStream = context.getContentResolver().openInputStream(uri);
-        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-        inputStream.close();
-        return bitmap;
-    }
-    private void processOCR(InputImage image) {
         recognizer.process(image)
                 .addOnSuccessListener(new OnSuccessListener<Text>() {
                     @Override
@@ -206,7 +207,19 @@ public class JoinClass extends AppCompatActivity implements View.OnClickListener
                         AIHELPER.runAIModel(JoinClass.this, prompt, new Listener() {
                             @Override
                             public void onSuccess(String result) {
-                                CodeSnippit c = new CodeSnippit();
+                                CodeSnippit c = new CodeSnippit(base64Image , ocrText , result );
+                                c.calculateGrade(JoinClass.this,classCodeStr, new Listener() {
+                                    @Override
+                                    public void onSuccess(String result) {
+                                        Toast.makeText(JoinClass.this, "Grade calculated: "+c.grade, Toast.LENGTH_LONG).show();
+                                        upload(classCodeStr, c);
+                                    }
+
+                                    @Override
+                                    public void onFailure(String errorMessage) {
+
+                                    }
+                                });
                             }
 
                             @Override
@@ -217,5 +230,66 @@ public class JoinClass extends AppCompatActivity implements View.OnClickListener
                     }
                 })
                 .addOnFailureListener(e -> Toast.makeText(JoinClass.this, "Text recognition failed", Toast.LENGTH_SHORT).show());
+    }
+    private void upload(String classCode, CodeSnippit codeSnippet) {
+        db = FirebaseDatabase.getInstance();
+        classRef = db.getReference("Classes");
+        classRef.child(classCode).get().addOnCompleteListener(task ->
+                {
+                    if (task.isSuccessful()) {
+                        DataSnapshot snapshot = task.getResult();
+                        if (snapshot.exists()) {
+                            Classroom classRoom = snapshot.getValue(Classroom.class);
+                            if (classRoom != null) {
+                                if(classRoom.studentsSubmissions!=null)
+                                {
+                                    classRoom.studentsSubmissions.put(StudetnID, codeSnippet);
+                                    classRef.child(classCode).setValue(classRoom);
+                                    uploadGrade(classCode, codeSnippet);
+                                }
+                                else
+                                {
+                                    classRoom.studentsSubmissions = new HashMap<>();
+                                    classRoom.studentsSubmissions.put(StudetnID, codeSnippet);
+                                    classRef.child(classCode).setValue(classRoom);
+                                    uploadGrade(classCode, codeSnippet);
+                                }
+
+                            }
+                        }
+                    } else {
+                        Toast.makeText(this, "Class not found", Toast.LENGTH_LONG).show();
+                    }
+                }
+                );
+    }
+    private void uploadGrade(String classCode, CodeSnippit codeSnippet) {
+        db = FirebaseDatabase.getInstance();
+        studentRef = db.getReference("Users").child("Students").child(StudetnID);
+        studentRef.get().addOnCompleteListener(task ->
+                {
+                    if (task.isSuccessful()) {
+                        DataSnapshot snapshot = task.getResult();
+                        if (snapshot.exists()) {
+                            Student student = snapshot.getValue(Student.class);
+                            if (student != null) {
+                                if(student.submissions!=null)
+                                {
+                                    student.submissions.put(classCode, codeSnippet.grade);
+                                    studentRef.setValue(student);
+                                }
+                                else
+                                {
+                                    student.submissions = new HashMap<>();
+                                    student.submissions.put(classCode, codeSnippet.grade);
+                                    studentRef.setValue(student);
+                                }
+                            }
+                        }
+                    } else {
+                        Toast.makeText(this, "Student not found", Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
     }
 }

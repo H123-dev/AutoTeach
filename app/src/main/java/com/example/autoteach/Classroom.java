@@ -15,7 +15,7 @@ public class Classroom {
     }
     public Classroom(String teacher, ArrayList<TestCase> testCases , String className)  {
         this.teacherID = teacher;
-        this.studentsSubmissions = new HashMap<>();
+        this.studentsSubmissions = new HashMap<String ,CodeSnippit>();
         this.testCases = testCases;
         this.classID = className;
     }

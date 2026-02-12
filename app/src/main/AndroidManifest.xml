@@ -2,10 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -18,21 +20,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AutoTeach"
         tools:targetApi="31">
-
+        <activity
+            android:name=".ClassView"
+            android:exported="false" />
         <!-- Your existing activities -->
-        <activity android:name=".JoinClass" android:exported="false" />
-        <activity android:name=".StudentsLounge" android:exported="false" />
-        <activity android:name=".CreateClass" android:exported="false" />
-        <activity android:name=".TeachersLounge" android:exported="false" />
-        <activity android:name=".Login" android:exported="false" />
-        <activity android:name=".Register" android:exported="true">
+        <activity
+            android:name=".JoinClass"
+            android:exported="false" />
+        <activity
+            android:name=".StudentsLounge"
+            android:exported="false" />
+        <activity
+            android:name=".CreateClass"
+            android:exported="false" />
+        <activity
+            android:name=".TeachersLounge"
+            android:exported="false" />
+        <activity
+            android:name=".Login"
+            android:exported="false" />
+        <activity
+            android:name=".Register"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Add FileProvider if you need file sharing -->
+        </activity> <!-- Add FileProvider if you need file sharing -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -42,6 +57,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
+
 </manifest>
