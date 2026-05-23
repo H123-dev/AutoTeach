@@ -56,13 +56,18 @@
 
     <Button
         android:id="@+id/backButton"
-        android:layout_width="80dp"
+        android:layout_width="112dp"
         android:layout_height="wrap_content"
-        android:text="back"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#1976D2"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_margin="16dp"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#1976D2"
+        android:text="back"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
 </RelativeLayout>

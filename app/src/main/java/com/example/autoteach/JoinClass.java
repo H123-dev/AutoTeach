@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DataSnapshot;   
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.mlkit.vision.common.InputImage;

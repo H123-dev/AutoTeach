@@ -63,7 +63,7 @@ public class CodeSnippit {
                                     {
                                         testCaseRes.put(tc.input , true);
                                         count[0]++;
-                                        grade += 100/3;
+                                        grade += 100.0/3;
                                         if(count[0]==3)
                                             listener.onSuccess("Graded");
                                     }
