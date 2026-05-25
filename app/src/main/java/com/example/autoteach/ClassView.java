@@ -16,7 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
-
+//דף שמציג את הציונים של התלמידים בכיתה מסוימת, המורה יכול לראות את הציונים של כל התלמידים בכיתה  המידע מוצג בצורה של רשימה עם תז התלמיד והציון שלו.
 public class ClassView extends AppCompatActivity {
     String classID;
     FirebaseDatabase db;

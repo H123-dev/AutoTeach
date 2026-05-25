@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.widget.Toast;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Firebase;
@@ -19,28 +21,28 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+//מחלקה זו אחראית על אחסון הקוד שהסטודנט כתב, תוצאות המבחנים והחישוב של הציון הסופי. היא גם אחראית על קבלת TESTCASEים מהכיתה ובדיקתם מול הקוד של הסטודנט. לאחר מכן היא מחשבת את הציון הסופי ומעדכנת אותו בכיתה.
 
 public class CodeSnippit {
     FirebaseDatabase db;
     DatabaseReference classRef;
-    public String base64Image;
     public String codeText;
     public String finalCode;
-    public HashMap<String , Boolean> testCaseRes;
+    public HashMap<String, Boolean> testCaseRes;
     public double grade;
 
-    public CodeSnippit() {
-    }
-    public CodeSnippit(String og , String ocr , String finalc)
+    public CodeSnippit()//פעולה בונה ריקה בשביל FIREBASE
+    {}
+    public CodeSnippit(String ocr , String finalc)
     {
-        this.base64Image = og;
         this.codeText = ocr;
         this.finalCode = finalc;
         this.testCaseRes = new HashMap<String, Boolean>();
         this.grade = 0;//temp
     }
-    public void calculateGrade(Activity a , String id , Listener listener)
+    public void calculateGrade(Activity a , String id , Listener listener) // פעולה זאת אחראית על הרכבת הציון הסופי של התלמיד בעזרת המחלקת עזר AIHELPER ובכך בודקת כל TESTCASE עד שיש ציון סופי
     {
+        Toast.makeText(a, "Grading...", Toast.LENGTH_SHORT).show();
         db = FirebaseDatabase.getInstance();
         classRef = db.getReference("Classes");
         classRef.child(id).get().addOnCompleteListener(task -> {

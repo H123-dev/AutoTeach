@@ -18,10 +18,10 @@ import android.app.Activity;
 public abstract class AIHELPER {
 
     static OkHttpClient client = new OkHttpClient();
-    public static final String OPENAI_API_KEY = "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";
+    public static final String OPENAI_API_KEY = "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";
 
 
-    public static void runAIModel(Activity a, String prompt, Listener listener) {
+    public static void runAIModel(Activity a, String prompt, Listener listener) {//פונקצייה הזאת אחראית על להריץ את המודל של OPENAI עם הPROMPT שניתן ואז להחזיר את התשובה של המודל דרך הLISTENER
         try {
             JSONObject body = new JSONObject();
             body.put("model", "gpt-4.1-mini");
@@ -68,7 +68,7 @@ public abstract class AIHELPER {
         }
     }
 
-    public static void runCodeOnJudge0(Activity a, String code, Listener listener) {
+    public static void runCodeOnJudge0(Activity a, String code, Listener listener) {//פונקצייה הזאת אחראית על להריץ את הקוד הניתן בספרייה חיצונית בשם JUDGE0 ואז להחזיר את הOUTPUT של הקוד
         try {
             JSONObject json = new JSONObject();
             json.put("language_id", 62);
@@ -133,7 +133,7 @@ public abstract class AIHELPER {
         }
     }
 
-    public static void checkTestCase(Activity a, String code, String input, String expectedOutput, Listener listener) {
+    public static void checkTestCase(Activity a, String code, String input, String expectedOutput, Listener listener) {//פונקצייה הזאת אחראית על לבדוק את הקוד שניתן מול TEST CASE מסויים, היא עושה את זה ע"י להוסיף פונקציית MAIN לקוד שניתן ואז להריץ את הקוד עם הINPUT של הTEST CASE ולבדוק אם הOUTPUT שווה לEXPECTED OUTPUT
 
         String promptCODE =
                 "You are given Java code that compiles but does not contain a main method. " +

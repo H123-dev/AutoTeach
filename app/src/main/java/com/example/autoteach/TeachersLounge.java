@@ -22,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+//דף הבית של המורה, שם הוא יכול לראות את כל הכיתות שלו וליצור כיתה חדשה
+
 public class TeachersLounge extends AppCompatActivity implements View.OnClickListener {
     String teacherID;
     Teacher currentTeacher;
@@ -64,7 +66,7 @@ public class TeachersLounge extends AppCompatActivity implements View.OnClickLis
         createClass.setOnClickListener(this);
     }
 
-    public void addClassButtonToUI(String classId, LinearLayout container) {
+    public void addClassButtonToUI(String classId, LinearLayout container) {// פונקציה שמוסיפה כפתור לכל כיתה של המורה, הכפתור מוביל לדף של הכיתה
         Button classButton = new Button(this);
         classButton.setText(classId);
         classButton.setTextSize(18);

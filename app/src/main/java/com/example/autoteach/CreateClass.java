@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 public class CreateClass extends AppCompatActivity implements View.OnClickListener {
 
+    //דף זה אחראי על יצירת כיתה חדשה ע"י המורה, הוא מקבל את מזהה המורה מהמסך הקודם ומאפשר לו להכניס 3  TESTCASEים  , בנוסף הוא מאפשר למורה להכניס שם לכיתה החדשה. לאחר מכן הוא יוצר את הכיתה במסד הנתונים ומעדכן את רשימת הכיתות של המורה.
     EditText tc1,tc2,tc3 , extc1, extc2, extc3 ,name;
     Button create , back;
     FirebaseDatabase db;

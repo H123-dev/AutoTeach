@@ -15,8 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+
+//דף הבית של התלמיד, שם הוא יכול לראות את כל הכיתות שהוא רשום אליהם ואת הציונים שלו בכל כיתה, וללחוץ על כיתה כדי להיכנס אליה
 
 public class StudentsLounge extends AppCompatActivity implements View.OnClickListener {
     Button joinClass;
@@ -35,7 +36,21 @@ public class StudentsLounge extends AppCompatActivity implements View.OnClickLis
         if (studentId == null || studentId.isEmpty()) {
             Toast.makeText(this, "Error: Student ID is missing.", Toast.LENGTH_LONG).show();
             finish();
+            return;
         }
+        joinClass = findViewById(R.id.join);
+        joinClass.setOnClickListener(this);
+
+        fetchStudentData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchStudentData();
+    }
+
+    private void fetchStudentData() {//מקבל את מידע התלמיד מFIREBASE
         DatabaseReference studentRef = db.getReference("Users").child("Students").child(studentId);
         studentRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
@@ -50,17 +65,16 @@ public class StudentsLounge extends AppCompatActivity implements View.OnClickLis
             }
 
             LinearLayout classesContainer = findViewById(R.id.classes_container);
+            classesContainer.removeAllViews(); // Clear old views before adding new ones
             for (String classId : allGrades.keySet()) {
                 addClassButtonToUI(classId, classesContainer);
             }
         });
-        joinClass = findViewById(R.id.join);
-        joinClass.setOnClickListener(this);
     }
 
-    public void addClassButtonToUI(String classId, LinearLayout container) {
+    public void addClassButtonToUI(String classId, LinearLayout container) {//יוצר כפתור לכל כיתה שהסטודנט רשום אליה, ומציג את הציון שלו בכיתה
         TextView classButton = new TextView(this);
-        classButton.setText(classId + " : " +allGrades.get(classId));
+        classButton.setText(classId + " : " + allGrades.get(classId));
         classButton.setTextSize(18);
         classButton.setTextColor(Color.parseColor("#3949AB"));
         classButton.setBackgroundColor(Color.parseColor("#E8EAF6"));
@@ -78,8 +92,7 @@ public class StudentsLounge extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        if(view==joinClass)
-        {
+        if (view == joinClass) {
             Intent intent = new Intent(this, JoinClass.class);
             intent.putExtra("studentID", studentId);
             startActivity(intent);
