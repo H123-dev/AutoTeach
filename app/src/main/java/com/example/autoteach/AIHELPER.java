@@ -18,7 +18,7 @@ import android.app.Activity;
 public abstract class AIHELPER {
 
     static OkHttpClient client = new OkHttpClient();
-    public static final String OPENAI_API_KEY = "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";
+    public static final String OPENAI_API_KEY = "na uh";
 
 
     public static void runAIModel(Activity a, String prompt, Listener listener) {//פונקצייה הזאת אחראית על להריץ את המודל של OPENAI עם הPROMPT שניתן ואז להחזיר את התשובה של המודל דרך הLISTENER

@@ -117,22 +117,30 @@ public class CreateClass extends AppCompatActivity implements View.OnClickListen
             DatabaseReference teacherRef = db.getReference("Users").child("Teachers").child(teacherID);
             DatabaseReference classRef = db.getReference("Classes");
             DatabaseReference newClassRef = classRef.child(classId);
-            newClassRef.setValue(newClass)
-                .addOnSuccessListener(aVoid -> {
-                    teacherRef.setValue(crrteacher)
-                        .addOnSuccessListener(aVoid1 -> {
-                            Toast.makeText(this, "Class Created", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(this, TeachersLounge.class);
-                            intent.putExtra("teacherID", teacherID);
-                            startActivity(intent);
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(this, "Error updating teacher: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                        });
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error creating class: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
+
+            newClassRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult().exists()) {
+                    Toast.makeText(this, "Class ID already exists. Please try again.", Toast.LENGTH_LONG).show();
+                } else {
+                    newClassRef.setValue(newClass)
+                            .addOnSuccessListener(aVoid -> {
+                                teacherRef.setValue(crrteacher)
+                                        .addOnSuccessListener(aVoid1 -> {
+                                            Toast.makeText(this, "Class Created", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(this, TeachersLounge.class);
+                                            intent.putExtra("teacherID", teacherID);
+                                            startActivity(intent);
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(this, "Error updating teacher: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        });
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(this, "Error creating class: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            });
+                }
+            });
+
         }
     }
 }

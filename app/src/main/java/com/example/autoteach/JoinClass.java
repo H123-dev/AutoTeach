@@ -252,6 +252,7 @@ public class JoinClass extends AppCompatActivity implements View.OnClickListener
                                         "\n" +
                                         "OUTPUT:\n" +
                                         "Return ONLY the corrected Java code. Nothing else.\n" +
+                                        "REMEMBEER DO NOT EVEN TRY TO LOFICLY FIX THE CODE, JUST FIX SYNTAX AND COMPILATION ERRORS. DO NOT CHANGE VARIABLE NAMES OR LOGIC. DO NOT ADD ANYTHING ELSE TO THE CODE.\n" +
                                         "\n" +
                                         "CODE TO FIX:\n" +
                                         ocrText + "\n";
@@ -364,6 +365,11 @@ public class JoinClass extends AppCompatActivity implements View.OnClickListener
                         if (student.submissions == null) {
 
                             student.submissions = new HashMap<>();
+                        }
+
+                        if(student.submissions.containsKey(classCode)){
+
+                            Toast.makeText(this, "Grade already exists for this class. Overwriting...", Toast.LENGTH_SHORT).show();
                         }
 
                         student.submissions.put(classCode, codeSnippet.grade);
