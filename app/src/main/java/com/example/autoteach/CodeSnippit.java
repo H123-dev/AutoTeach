@@ -38,7 +38,7 @@ public class CodeSnippit {
         this.codeText = ocr;
         this.finalCode = finalc;
         this.testCaseRes = new HashMap<String, Boolean>();
-        this.grade = 0;
+        this.grade = 0;//temp
     }
     public void calculateGrade(Activity a , String id , Listener listener) // פעולה זאת אחראית על הרכבת הציון הסופי של התלמיד בעזרת המחלקת עזר AIHELPER ובכך בודקת כל TESTCASE עד שיש ציון סופי
     {
