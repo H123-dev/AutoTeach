@@ -86,6 +86,10 @@ public class CodeSnippit {
                         }
                     }
                 }
+                else
+                {
+                    Toast.makeText(a, "Classroom not found - CANNOT GRADE", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
