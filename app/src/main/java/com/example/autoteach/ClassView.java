@@ -47,6 +47,10 @@ public class ClassView extends AppCompatActivity {
                     for(String studentId : grades.keySet())
                     {
                         CodeSnippit snippit = grades.get(studentId);
+                        if(snippit==null)
+                        {
+                            continue;
+                        }
                         TextView studentGrade = new TextView(this);
                         studentGrade.setText(studentId + " : " + snippit.grade);
                         studentGrade.setTextSize(18);

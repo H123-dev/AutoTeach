@@ -72,9 +72,14 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             String Password = password.getText().toString();
             String Id = id.getText().toString();
 
+            if(name.getText().toString().isEmpty() || password.getText().toString().isEmpty() || id.getText().toString().isEmpty() || (!teacher.isChecked() && !student.isChecked()))
+            {
+                Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
             if(!Helper.checkPass(Password))
             {
-                Toast.makeText(this, "password must contain lower case upper case and numbers", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "password must contain lower case upper case and numbers and must be 6 or more characters", Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -84,46 +89,33 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 return;
             }
 
-            if(!teacher.isChecked() && !student.isChecked())
-            {
-                Toast.makeText(this, "please select account type", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            if (teacher.isChecked() && student.isChecked())
-            {
-                Toast.makeText(this, "please select only one account type", Toast.LENGTH_LONG).show();
-                return;
-            }
-
             if(teacher.isChecked())
             {
                 Teacher t = new Teacher(Name,Password,Id);
 
                 TeacherRef.child(Id).setValue(t)
-                        .addOnSuccessListener(aVoid ->
-                                Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show())
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(this, TeachersLounge.class);
+                            intent.putExtra("teacherID", Id);
+                            startActivity(intent);
+                        })
                         .addOnFailureListener(e ->
-                                Toast.makeText(this, "Registration failed: "+e.getMessage(), Toast.LENGTH_SHORT).show());
-
-                Intent intent = new Intent(this, TeachersLounge.class);
-                intent.putExtra("teacherID",Id);
-                startActivity(intent);
+                                Toast.makeText(this, "Registration failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             }
             else if(student.isChecked())
             {
                 Student s = new Student(Name,Password,Id);
 
                 StudentRef.child(Id).setValue(s)
-                        .addOnSuccessListener(aVoid ->
-                                Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show())
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Register.this, StudentsLounge.class);
+                            intent.putExtra("studentID", Id);
+                            startActivity(intent);
+                        })
                         .addOnFailureListener(e ->
-                                Toast.makeText(this, "Registration failed: "+e.getMessage(), Toast.LENGTH_SHORT).show());
-
-                Intent intent = new Intent(Register.this, StudentsLounge.class);
-                String Sid = id.getText().toString().trim();
-                intent.putExtra("studentID", Sid);
-                startActivity(intent);
+                                Toast.makeText(this, "Registration failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             }
         }
     }

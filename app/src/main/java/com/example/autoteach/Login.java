@@ -74,6 +74,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             String Password = password.getText().toString();
             String Id = id.getText().toString();
 
+            if(id.getText().toString().isEmpty() || password.getText().toString().isEmpty() || (!teacher.isChecked() && !student.isChecked()))
+            {
+                Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if(teacher.isChecked())
             {
                 TeacherRef.child(Id).get().addOnCompleteListener(task -> {
@@ -91,8 +97,19 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         }
                         else
                         {
-                            Toast.makeText(this, "wrong password", Toast.LENGTH_SHORT).show();
+                            if(t==null)
+                            {
+                                Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(this, "wrong password", Toast.LENGTH_SHORT).show();
+                            }
                         }
+                    }
+                    else
+                    {
+                        Toast.makeText(this, "Error: "+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -113,8 +130,19 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         }
                         else
                         {
-                            Toast.makeText(this, "wrong password", Toast.LENGTH_SHORT).show();
+                            if(u==null)
+                            {
+                                Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(this, "wrong password", Toast.LENGTH_SHORT).show();
+                            }
                         }
+                    }
+                    else
+                    {
+                        Toast.makeText(this, "Error: "+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

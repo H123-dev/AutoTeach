@@ -60,7 +60,7 @@ public class CreateClass extends AppCompatActivity implements View.OnClickListen
                     Toast.makeText(this, "Error: Teacher not found", Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(this, "Error loading teacher 1", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Error loading teacher ", Toast.LENGTH_LONG).show();
             }
         });
     }

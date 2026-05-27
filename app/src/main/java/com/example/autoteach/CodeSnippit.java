@@ -80,7 +80,7 @@ public class CodeSnippit {
 
                                 @Override
                                 public void onFailure(String errorMessage) {
-
+                                    listener.onFailure(errorMessage);
                                 }
                             });
                         }

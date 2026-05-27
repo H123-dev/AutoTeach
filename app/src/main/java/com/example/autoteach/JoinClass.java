@@ -71,7 +71,6 @@ public class JoinClass extends AppCompatActivity implements View.OnClickListener
                                 processOCR(uri, bitmap);
                             } catch (Exception e) {
                                 Toast.makeText(this, "Failed to load image: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                                throw new RuntimeException(e);
                             }
                         }
                     });
@@ -86,7 +85,6 @@ public class JoinClass extends AppCompatActivity implements View.OnClickListener
                             processOCR(photoUri, bitmap);
                         } catch (Exception e) {
                             Toast.makeText(this, "Failed to process photo: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                            throw new RuntimeException(e);
                         }
                     });
 
